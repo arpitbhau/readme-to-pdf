@@ -14,7 +14,7 @@ A powerful tool to convert Markdown README files to PDF with GitHub's dark theme
 ## Requirements
 
 - Python 3.6+
-- wkhtmltopdf (required for PDF conversion)
+- WeasyPrint (required for PDF conversion)
 
 ## Installation
 
@@ -34,10 +34,10 @@ A powerful tool to convert Markdown README files to PDF with GitHub's dark theme
    ```bash
    pip install -r requirements.txt
    ```
-4. Install wkhtmltopdf:
-   - On Ubuntu/Debian: `sudo apt-get install wkhtmltopdf`
-   - On macOS: `brew install wkhtmltopdf`
-   - On Windows: Download from [wkhtmltopdf website](https://wkhtmltopdf.org/downloads.html)
+4. Install WeasyPrint dependencies:
+   - On Ubuntu/Debian: `sudo apt-get install python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0`
+   - On macOS: `brew install pango`
+   - On Windows: No additional dependencies required
 
 ## Usage
 

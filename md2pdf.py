@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Jai Shree Ram
 
-import pdfkit
+from weasyprint import HTML, CSS
 from bs4 import BeautifulSoup
 import os
 import markdown2
@@ -9,6 +9,7 @@ import re
 import shutil
 import argparse
 import sys
+from weasyprint.text.fonts import FontConfiguration
 
 
 def parse_arguments():
@@ -222,23 +223,26 @@ def convert_markdown_to_html(input_file, bg_color, text_color, heading_color, li
 
 def convert_html_to_pdf(html_file, output_file, page_size, margin):
     """
-    Convert HTML file to PDF using pdfkit
+    Convert HTML file to PDF using WeasyPrint
     Args:
         html_file (str): Path to input HTML file
         output_file (str): Path to output PDF file
         page_size (str): Page size
         margin (str): Page margin
     """
-    options = {
-        'page-size': page_size,
-        'margin-top': margin,
-        'margin-right': margin,
-        'margin-bottom': margin,
-        'margin-left': margin,
-        'encoding': 'UTF-8',
-        'no-outline': None
-    }
-    pdfkit.from_file(html_file, output_file, options=options)
+    # Configure fonts
+    font_config = FontConfiguration()
+    
+    # Create CSS for page size and margins
+    css = CSS(string=f'''
+        @page {{
+            size: {page_size};
+            margin: {margin};
+        }}
+    ''', font_config=font_config)
+    
+    # Convert HTML to PDF
+    HTML(html_file).write_pdf(output_file, stylesheets=[css], font_config=font_config)
 
 
 def main():
@@ -247,14 +251,14 @@ def main():
     """
     args = parse_arguments()
     
-    # Check if wkhtmltopdf is installed
+    # Check if WeasyPrint is installed
     try:
-        pdfkit.from_string('', 'test.pdf')
-    except OSError:
-        print("Error: wkhtmltopdf is not installed. Please install it first.")
-        print("On Ubuntu/Debian: sudo apt-get install wkhtmltopdf")
-        print("On macOS: brew install wkhtmltopdf")
-        print("On Windows: Download from https://wkhtmltopdf.org/downloads.html")
+        HTML('').write_pdf('test.pdf')
+    except Exception as e:
+        print("Error: WeasyPrint is not properly installed. Please install it first.")
+        print("On Ubuntu/Debian: sudo apt-get install python3-cffi python3-brotli libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0")
+        print("On macOS: brew install pango")
+        print("On Windows: pip install weasyprint")
         sys.exit(1)
     
     # Set default output file names
